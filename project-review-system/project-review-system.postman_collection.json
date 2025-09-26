@@ -1,0 +1,571 @@
+{
+  "info": {
+    "name": "Project Review System API",
+    "description": "Complete API testing for Project Review System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "adminId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reviewer1Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reviewer2Id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "batchId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "projectId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "panelId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏠 Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "👥 User Management",
+      "item": [
+        {
+          "name": "Create Admin User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Admin created successfully\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.role).to.eql('Admin');",
+                  "    pm.collectionVariables.set(\"adminId\", jsonData._id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Admin Kumar\",\n  \"email\": \"admin@university.edu\",\n  \"role\": \"Admin\",\n  \"passwordHash\": \"$2b$10$hashed_password_admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reviewer 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Reviewer 1 created successfully\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.role).to.eql('Reviewer');",
+                  "    pm.collectionVariables.set(\"reviewer1Id\", jsonData._id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Sarah Johnson\",\n  \"email\": \"sarah.johnson@university.edu\",\n  \"role\": \"Reviewer\",\n  \"passwordHash\": \"$2b$10$hashed_password_reviewer1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reviewer 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Reviewer 2 created successfully\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.role).to.eql('Reviewer');",
+                  "    pm.collectionVariables.set(\"reviewer2Id\", jsonData._id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Michael Chen\",\n  \"email\": \"michael.chen@university.edu\",\n  \"role\": \"Reviewer\",\n  \"passwordHash\": \"$2b$10$hashed_password_reviewer2\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Student 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Brown\",\n  \"email\": \"alice.brown@student.edu\",\n  \"role\": \"Student\",\n  \"passwordHash\": \"$2b$10$hashed_password_student1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Student 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bob Wilson\",\n  \"email\": \"bob.wilson@student.edu\",\n  \"role\": \"Student\",\n  \"passwordHash\": \"$2b$10$hashed_password_student2\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Student 3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carol Davis\",\n  \"email\": \"carol.davis@student.edu\",\n  \"role\": \"Student\",\n  \"passwordHash\": \"$2b$10$hashed_password_student3\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Student 4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"David Miller\",\n  \"email\": \"david.miller@student.edu\",\n  \"role\": \"Student\",\n  \"passwordHash\": \"$2b$10$hashed_password_student4\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Users by Role (Reviewer)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/role/Reviewer",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "role", "Reviewer"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📚 Batch Management",
+      "item": [
+        {
+          "name": "Create Batch",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Batch created successfully\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.batchName).to.eql('2024-CSE-Batch');",
+                  "    pm.collectionVariables.set(\"batchId\", jsonData._id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batchName\": \"2024-CSE-Batch\",\n  \"department\": \"Computer Science\",\n  \"year\": 2024\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/batches",
+              "host": ["{{baseUrl}}"],
+              "path": ["batches"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Batches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/batches",
+              "host": ["{{baseUrl}}"],
+              "path": ["batches"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💼 Project Management",
+      "item": [
+        {
+          "name": "Create Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Project created successfully\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.projectTitle).to.eql('AI-Powered Learning Management System');",
+                  "    pm.collectionVariables.set(\"projectId\", jsonData._id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batchId\": \"{{batchId}}\",\n  \"projectTitle\": \"AI-Powered Learning Management System\",\n  \"supervisorId\": \"{{adminId}}\",\n  \"students\": [\n    {\n      \"studentName\": \"Alice Brown\",\n      \"registerNo\": \"2024CSE001\"\n    },\n    {\n      \"studentName\": \"Bob Wilson\", \n      \"registerNo\": \"2024CSE002\"\n    },\n    {\n      \"studentName\": \"Carol Davis\",\n      \"registerNo\": \"2024CSE003\"\n    },\n    {\n      \"studentName\": \"David Miller\",\n      \"registerNo\": \"2024CSE004\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Reviewers to Project",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reviewerIds\": [\"{{reviewer1Id}}\", \"{{reviewer2Id}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}/reviewers",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}", "reviewers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📋 Review Management",
+      "item": [
+        {
+          "name": "Create Review 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectId\": \"{{projectId}}\",\n  \"reviewNumber\": 1,\n  \"maxTotal\": 100,\n  \"weight\": 0.3,\n  \"reviewDate\": \"2024-01-15\",\n  \"criteria\": [\n    {\n      \"criteriaName\": \"Problem Understanding\",\n      \"maxMarks\": 25\n    },\n    {\n      \"criteriaName\": \"Literature Survey\", \n      \"maxMarks\": 25\n    },\n    {\n      \"criteriaName\": \"Methodology\",\n      \"maxMarks\": 30\n    },\n    {\n      \"criteriaName\": \"Report Quality\",\n      \"maxMarks\": 20\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Review 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectId\": \"{{projectId}}\",\n  \"reviewNumber\": 2,\n  \"maxTotal\": 100,\n  \"weight\": 0.4,\n  \"reviewDate\": \"2024-02-20\",\n  \"criteria\": [\n    {\n      \"criteriaName\": \"Implementation\",\n      \"maxMarks\": 40\n    },\n    {\n      \"criteriaName\": \"Testing\", \n      \"maxMarks\": 30\n    },\n    {\n      \"criteriaName\": \"Results Analysis\",\n      \"maxMarks\": 30\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Marks for Review 1",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marks\": [\n    {\n      \"studentName\": \"Alice Brown\",\n      \"reviewerId\": \"{{reviewer1Id}}\",\n      \"criteriaName\": \"Problem Understanding\",\n      \"marksObtained\": 22\n    },\n    {\n      \"studentName\": \"Alice Brown\",\n      \"reviewerId\": \"{{reviewer1Id}}\",\n      \"criteriaName\": \"Literature Survey\",\n      \"marksObtained\": 20\n    },\n    {\n      \"studentName\": \"Bob Wilson\",\n      \"reviewerId\": \"{{reviewer2Id}}\",\n      \"criteriaName\": \"Problem Understanding\", \n      \"marksObtained\": 24\n    }\n  ],\n  \"comments\": [\n    {\n      \"reviewerId\": \"{{reviewer1Id}}\",\n      \"comment\": \"Excellent problem understanding. Good literature survey but could include more recent papers.\"\n    },\n    {\n      \"reviewerId\": \"{{reviewer2Id}}\",\n      \"comment\": \"Strong start. Methodology needs more detailed explanation.\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews/REVIEW_ID_HERE/marks",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "REVIEW_ID_HERE", "marks"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🏛️ Panel Management",
+      "item": [
+        {
+          "name": "Create Panel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"panelName\": \"Panel A - AI Projects\",\n  \"facultyCoordinatorId\": \"{{adminId}}\",\n  \"studentCoordinatorId\": \"STUDENT_ID_FROM_ABOVE\",\n  \"studentCoordinatorPhone\": \"+1234567890\",\n  \"venue\": \"Room 101, CS Building\",\n  \"projects\": [\n    {\n      \"projectId\": \"{{projectId}}\",\n      \"reviewNumber\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/panels",
+              "host": ["{{baseUrl}}"],
+              "path": ["panels"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Final Reports",
+      "item": [
+        {
+          "name": "Generate Final Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/final-reports/generate/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["final-reports", "generate", "{{projectId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Final Report for Project",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/final-reports/project/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["final-reports", "project", "{{projectId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
