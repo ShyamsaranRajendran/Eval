@@ -1,83 +1,55 @@
 import 'package:flutter/material.dart';
-import 'screens/login/login_screen.dart';
-import 'screens/admin/admin_dashboard.dart';
-import 'screens/admin/batches_screen.dart';
-import 'screens/admin/users_screen.dart';
-import 'screens/admin/panels_screen.dart';
-import 'screens/admin/reports_screen.dart';
-import 'screens/reviewer/reviewer_dashboard.dart';
-import 'screens/reviewer/panel_detail_screen.dart';
-import 'screens/reviewer/team_review_screen.dart';
+import 'presentation/pages/splash/splash_screen.dart';
+import 'presentation/pages/auth/modern_login_screen.dart';
+import 'presentation/pages/auth/forgot_password_screen.dart';
+import 'presentation/pages/admin/comprehensive_admin_dashboard.dart';
+import 'presentation/pages/coordinator/comprehensive_coordinator_dashboard.dart';
+import 'presentation/pages/faculty/comprehensive_faculty_dashboard.dart';
 
 class AppRoutes {
   // Route names
+  static const String splash = '/';
   static const String login = '/login';
+  static const String forgotPassword = '/forgot-password';
   static const String adminDashboard = '/admin-dashboard';
-  static const String reviewerDashboard = '/reviewer-dashboard';
-  static const String batches = '/batches';
-  static const String users = '/users';
-  static const String panels = '/panels';
-  static const String reports = '/reports';
-  static const String panelDetail = '/panel-detail';
-  static const String teamReview = '/team-review';
-
-  // Initial route
-  static const String initialRoute = login;
+  static const String coordinatorDashboard = '/coordinator-dashboard';
+  static const String facultyDashboard = '/faculty-dashboard';
 
   // Route generator
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case splash:
+        return MaterialPageRoute(
+          builder: (context) => const SplashScreen(),
+          settings: settings,
+        );
+
       case login:
         return MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
+          builder: (context) => const ModernLoginScreen(),
+          settings: settings,
+        );
+
+      case forgotPassword:
+        return MaterialPageRoute(
+          builder: (context) => const ForgotPasswordScreen(),
           settings: settings,
         );
 
       case adminDashboard:
         return MaterialPageRoute(
-          builder: (context) => const AdminDashboard(),
+          builder: (context) => const ComprehensiveAdminDashboard(),
+          settings: settings,
+        );
+      case coordinatorDashboard:
+        return MaterialPageRoute(
+          builder: (context) => const ComprehensiveCoordinatorDashboard(),
           settings: settings,
         );
 
-      case reviewerDashboard:
+      case facultyDashboard:
         return MaterialPageRoute(
-          builder: (context) => const ReviewerDashboard(),
-          settings: settings,
-        );
-
-      case batches:
-        return MaterialPageRoute(
-          builder: (context) => const BatchesScreen(),
-          settings: settings,
-        );
-
-      case users:
-        return MaterialPageRoute(
-          builder: (context) => const UsersScreen(),
-          settings: settings,
-        );
-
-      case panels:
-        return MaterialPageRoute(
-          builder: (context) => const PanelsScreen(),
-          settings: settings,
-        );
-
-      case reports:
-        return MaterialPageRoute(
-          builder: (context) => const ReportsScreen(),
-          settings: settings,
-        );
-
-      case panelDetail:
-        return MaterialPageRoute(
-          builder: (context) => const PanelDetailScreen(),
-          settings: settings,
-        );
-
-      case teamReview:
-        return MaterialPageRoute(
-          builder: (context) => const TeamReviewScreen(),
+          builder: (context) => const ComprehensiveFacultyDashboard(),
           settings: settings,
         );
 
@@ -89,19 +61,6 @@ class AppRoutes {
     }
   }
 
-  // Get all routes as a map (alternative approach)
-  static Map<String, WidgetBuilder> get routes => {
-    login: (context) => const LoginScreen(),
-    adminDashboard: (context) => const AdminDashboard(),
-    reviewerDashboard: (context) => const ReviewerDashboard(),
-    batches: (context) => const BatchesScreen(),
-    users: (context) => const UsersScreen(),
-    panels: (context) => const PanelsScreen(),
-    reports: (context) => const ReportsScreen(),
-    panelDetail: (context) => const PanelDetailScreen(),
-    teamReview: (context) => const TeamReviewScreen(),
-  };
-
   // Helper methods for navigation
   static void navigateToLogin(BuildContext context) {
     Navigator.of(context).pushReplacementNamed(login);
@@ -111,53 +70,12 @@ class AppRoutes {
     Navigator.of(context).pushReplacementNamed(adminDashboard);
   }
 
-  static void navigateToReviewerDashboard(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed(reviewerDashboard);
+  static void navigateToCoordinatorDashboard(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(coordinatorDashboard);
   }
 
-  static void navigateToBatches(BuildContext context) {
-    Navigator.of(context).pushNamed(batches);
-  }
-
-  static void navigateToUsers(BuildContext context) {
-    Navigator.of(context).pushNamed(users);
-  }
-
-  static void navigateToPanels(BuildContext context) {
-    Navigator.of(context).pushNamed(panels);
-  }
-
-  static void navigateToReports(BuildContext context) {
-    Navigator.of(context).pushNamed(reports);
-  }
-
-  static void navigateToPanelDetail(
-    BuildContext context, {
-    Map<String, dynamic>? arguments,
-  }) {
-    Navigator.of(context).pushNamed(panelDetail, arguments: arguments);
-  }
-
-  static void navigateToTeamReview(BuildContext context) {
-    Navigator.of(context).pushNamed(teamReview);
-  }
-
-  // Navigation with result handling
-  static Future<T?> navigateToWithResult<T>(
-    BuildContext context,
-    String routeName, {
-    Object? arguments,
-  }) {
-    return Navigator.of(context).pushNamed<T>(routeName, arguments: arguments);
-  }
-
-  // Replace current route
-  static void replaceWith(
-    BuildContext context,
-    String routeName, {
-    Object? arguments,
-  }) {
-    Navigator.of(context).pushReplacementNamed(routeName, arguments: arguments);
+  static void navigateToFacultyDashboard(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(facultyDashboard);
   }
 
   // Clear stack and navigate
@@ -173,19 +91,85 @@ class AppRoutes {
     );
   }
 
-  // Pop until a specific route
-  static void popUntil(BuildContext context, String routeName) {
-    Navigator.of(context).popUntil(ModalRoute.withName(routeName));
-  }
-
   // Check if can pop
   static bool canPop(BuildContext context) {
     return Navigator.of(context).canPop();
   }
+}
 
-  // Pop with result
-  static void popWithResult<T>(BuildContext context, [T? result]) {
-    Navigator.of(context).pop(result);
+// Placeholder dashboard screens
+class AdminDashboard extends StatelessWidget {
+  const AdminDashboard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Admin Dashboard'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => AppRoutes.navigateToLogin(context),
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text(
+          'Admin Dashboard - Coming Soon',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+    );
+  }
+}
+
+class CoordinatorDashboard extends StatelessWidget {
+  const CoordinatorDashboard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Coordinator Dashboard'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => AppRoutes.navigateToLogin(context),
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text(
+          'Coordinator Dashboard - Coming Soon',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+    );
+  }
+}
+
+class FacultyDashboard extends StatelessWidget {
+  const FacultyDashboard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Faculty Dashboard'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => AppRoutes.navigateToLogin(context),
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text(
+          'Faculty Dashboard - Coming Soon',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+    );
   }
 }
 

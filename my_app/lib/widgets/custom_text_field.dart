@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/colors.dart';
+import '../core/constants/colors.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -63,13 +63,13 @@ class CustomTextField extends StatelessWidget {
         prefixIcon: prefixIcon != null
             ? Icon(
                 prefixIcon,
-                color: enabled ? AppColors.primary : AppColors.grey,
+                color: enabled ? AppColors.primary : AppColors.grey500,
               )
             : null,
         suffixIcon: suffixIcon,
         filled: filled,
         fillColor:
-            fillColor ?? (enabled ? AppColors.surface : AppColors.greyLight),
+            fillColor ?? (enabled ? AppColors.surface : AppColors.grey100),
         border: border ?? _getDefaultBorder(),
         enabledBorder: border ?? _getDefaultBorder(),
         focusedBorder: border ?? _getFocusedBorder(),
@@ -77,10 +77,10 @@ class CustomTextField extends StatelessWidget {
         focusedErrorBorder: _getErrorBorder(),
         disabledBorder: _getDisabledBorder(),
         labelStyle: TextStyle(
-          color: enabled ? AppColors.textSecondary : AppColors.grey,
+          color: enabled ? AppColors.textSecondary : AppColors.grey500,
         ),
-        hintStyle: const TextStyle(color: AppColors.textHint),
-        errorStyle: const TextStyle(color: AppColors.error, fontSize: 12),
+        hintStyle: TextStyle(color: AppColors.textTertiary),
+        errorStyle: TextStyle(color: AppColors.error, fontSize: 12),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
@@ -92,28 +92,28 @@ class CustomTextField extends StatelessWidget {
   OutlineInputBorder _getDefaultBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.greyLight, width: 1),
+      borderSide: BorderSide(color: AppColors.grey200, width: 1),
     );
   }
 
   OutlineInputBorder _getFocusedBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+      borderSide: BorderSide(color: AppColors.primary, width: 2),
     );
   }
 
   OutlineInputBorder _getErrorBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.error, width: 2),
+      borderSide: BorderSide(color: AppColors.error, width: 2),
     );
   }
 
   OutlineInputBorder _getDisabledBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.grey, width: 1),
+      borderSide: BorderSide(color: AppColors.grey500, width: 1),
     );
   }
 }
@@ -225,7 +225,7 @@ class SearchTextField extends StatelessWidget {
       onChanged: onChanged,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(25),
-        borderSide: const BorderSide(color: AppColors.greyLight, width: 1),
+        borderSide: BorderSide(color: AppColors.grey200, width: 1),
       ),
     );
   }

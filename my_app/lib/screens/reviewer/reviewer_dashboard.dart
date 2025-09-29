@@ -4,6 +4,7 @@ import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../../services/api_service.dart';
 import '../../widgets/card_widget.dart';
+import '../../models/panel_model.dart';
 
 class ReviewerDashboard extends StatefulWidget {
   const ReviewerDashboard({super.key});
@@ -15,7 +16,7 @@ class ReviewerDashboard extends StatefulWidget {
 class _ReviewerDashboardState extends State<ReviewerDashboard> {
   final _authController = AuthController();
   final _apiService = ApiService();
-  List<Map<String, dynamic>> _assignedPanels = [];
+  List<PanelModel> _assignedPanels = [];
   bool _isLoading = false;
 
   @override
@@ -180,14 +181,14 @@ class _ReviewerDashboardState extends State<ReviewerDashboard> {
                         return Card(
                           margin: const EdgeInsets.only(bottom: 16),
                           child: ListTile(
-                            title: Text(panel['name'] ?? 'Panel ${index + 1}'),
+                            title: Text(panel.name),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(panel['description'] ?? 'No description'),
+                                Text('Venue: ${panel.venue}'),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Due: ${panel['due_date'] ?? 'Not set'}',
+                                  'Date: ${panel.reviewDate.toString().split(' ')[0]}',
                                   style: TextStyle(
                                     color: AppColors.warning,
                                     fontWeight: FontWeight.w500,
@@ -213,11 +214,11 @@ class _ReviewerDashboardState extends State<ReviewerDashboard> {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: _getStatusColor(panel['status']),
+                                color: _getStatusColor(panel.status),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                panel['status'] ?? 'Pending',
+                                panel.status,
                                 style: const TextStyle(
                                   color: AppColors.white,
                                   fontSize: 12,

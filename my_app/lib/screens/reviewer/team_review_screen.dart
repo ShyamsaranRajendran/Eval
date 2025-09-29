@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../../services/api_service.dart';
+import '../../models/review_model.dart';
 
 class TeamReviewScreen extends StatefulWidget {
   const TeamReviewScreen({super.key});
@@ -12,7 +13,7 @@ class TeamReviewScreen extends StatefulWidget {
 
 class _TeamReviewScreenState extends State<TeamReviewScreen> {
   final ApiService _apiService = ApiService();
-  List<Map<String, dynamic>> _teamReviews = [];
+  List<ReviewModel> _teamReviews = [];
   bool _isLoading = false;
 
   @override
@@ -73,22 +74,22 @@ class _TeamReviewScreenState extends State<TeamReviewScreen> {
                   margin: const EdgeInsets.only(bottom: 16),
                   child: ExpansionTile(
                     leading: CircleAvatar(
-                      backgroundColor: _getStatusColor(review['status']),
+                      backgroundColor: _getStatusColor(review.status),
                       child: Icon(
-                        _getStatusIcon(review['status']),
+                        _getStatusIcon(review.status),
                         color: AppColors.white,
                       ),
                     ),
-                    title: Text(review['title'] ?? 'Review ${index + 1}'),
+                    title: Text('Review #${review.reviewNumber}'),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Team: ${review['team_name'] ?? 'Unknown'}',
+                          'Reviewer: ${review.reviewerName}',
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          'Due: ${review['due_date'] ?? 'Not set'}',
+                          'Score: ${review.totalScore}/${review.maxScore}',
                           style: TextStyle(
                             color: AppColors.warning,
                             fontSize: 12,
@@ -102,11 +103,11 @@ class _TeamReviewScreenState extends State<TeamReviewScreen> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: _getStatusColor(review['status']),
+                        color: _getStatusColor(review.status),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        review['status'] ?? 'Pending',
+                        review.status,
                         style: const TextStyle(
                           color: AppColors.white,
                           fontSize: 12,
@@ -120,28 +121,41 @@ class _TeamReviewScreenState extends State<TeamReviewScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (review['description'] != null) ...[
-                              Text(
-                                'Description:',
-                                style: Theme.of(context).textTheme.titleSmall
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
+                            Text(
+                              'Review Details:',
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 4),
+                            Text('Project ID: ${review.projectId}'),
+                            const SizedBox(height: 4),
+                            Text('Status: ${review.status}'),
+                            if (review.reviewDate != null) ...[
                               const SizedBox(height: 4),
-                              Text(review['description']),
-                              const SizedBox(height: 16),
-                            ],
-
-                            // Team members
-                            if (review['team_members'] != null) ...[
                               Text(
-                                'Team Members:',
+                                'Review Date: ${review.reviewDate!.toString().split(' ')[0]}',
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+
+                            // Comments section
+                            if (review.comments.isNotEmpty) ...[
+                              Text(
+                                'Comments:',
                                 style: Theme.of(context).textTheme.titleSmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8),
-                              ...(_buildTeamMembersList(
-                                review['team_members'],
-                              )),
+                              ...review.comments.entries
+                                  .map(
+                                    (entry) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 4),
+                                      child: Text(
+                                        '${entry.key}: ${entry.value}',
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
                               const SizedBox(height: 16),
                             ],
 
@@ -151,8 +165,8 @@ class _TeamReviewScreenState extends State<TeamReviewScreen> {
                                 Expanded(
                                   child: ElevatedButton.icon(
                                     icon: const Icon(Icons.rate_review),
-                                    label: const Text('Start Review'),
-                                    onPressed: () => _startReview(review),
+                                    label: const Text('Edit Review'),
+                                    onPressed: () => _editReview(review),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primary,
                                       foregroundColor: AppColors.white,
@@ -190,31 +204,6 @@ class _TeamReviewScreenState extends State<TeamReviewScreen> {
     );
   }
 
-  List<Widget> _buildTeamMembersList(dynamic members) {
-    if (members is! List) return [];
-
-    return (members).map((member) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Row(
-          children: [
-            const Icon(Icons.person, size: 16, color: AppColors.textSecondary),
-            const SizedBox(width: 8),
-            Text(member['name'] ?? member['username'] ?? 'Unknown'),
-            const SizedBox(width: 8),
-            Text(
-              '(${member['role'] ?? 'Member'})',
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      );
-    }).toList();
-  }
-
   Color _getStatusColor(String? status) {
     switch (status?.toLowerCase()) {
       case 'completed':
@@ -241,45 +230,25 @@ class _TeamReviewScreenState extends State<TeamReviewScreen> {
     }
   }
 
-  void _startReview(Map<String, dynamic> review) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Start Review'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Are you ready to start reviewing "${review['title']}"?'),
-            const SizedBox(height: 8),
-            Text(
-              'This will mark the review as in progress.',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
-            ),
-          ],
+  void _editReview(ReviewModel review) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Edit review #${review.reviewNumber} feature coming soon',
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(AppStrings.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // TODO: Start review logic
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Review started successfully')),
-              );
-            },
-            child: const Text('Start Review'),
-          ),
-        ],
       ),
     );
   }
 
-  void _viewDetails(Map<String, dynamic> review) {
+  void _viewDetails(ReviewModel review) {
     // TODO: Navigate to detailed review screen
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'View details for review #${review.reviewNumber} feature coming soon',
+        ),
+      ),
+    );
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('View details feature coming soon')),
     );

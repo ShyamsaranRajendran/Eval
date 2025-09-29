@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../../services/api_service.dart';
+import '../../models/panel_model.dart';
 
 class PanelsScreen extends StatefulWidget {
   const PanelsScreen({super.key});
@@ -12,7 +13,7 @@ class PanelsScreen extends StatefulWidget {
 
 class _PanelsScreenState extends State<PanelsScreen> {
   final ApiService _apiService = ApiService();
-  List<Map<String, dynamic>> _panels = [];
+  List<PanelModel> _panels = [];
   bool _isLoading = false;
 
   @override
@@ -72,13 +73,13 @@ class _PanelsScreenState extends State<PanelsScreen> {
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   child: ListTile(
-                    title: Text(panel['name'] ?? 'Panel ${index + 1}'),
-                    subtitle: Text(panel['description'] ?? 'No description'),
+                    title: Text(panel.name),
+                    subtitle: Text(panel.venue),
                     leading: const Icon(Icons.dashboard),
                     trailing: Text(
-                      panel['status'] ?? 'Active',
+                      'Projects: ${panel.projects.length}',
                       style: TextStyle(
-                        color: panel['status'] == 'Active'
+                        color: panel.projects.isNotEmpty
                             ? AppColors.success
                             : AppColors.warning,
                         fontWeight: FontWeight.bold,

@@ -1,6 +1,6 @@
 class AppStrings {
   // App related
-  static const String appName = 'My App';
+  static const String appName = 'Eval';
   static const String appVersion = '1.0.0';
 
   // Authentication

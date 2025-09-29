@@ -12,7 +12,7 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   final ApiService _apiService = ApiService();
-  Map<String, dynamic>? _reports;
+  List<Map<String, dynamic>> _reports = [];
   bool _isLoading = false;
 
   @override
@@ -57,7 +57,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _reports == null
+          : _reports.isEmpty
           ? const Center(
               child: Text(
                 AppStrings.noData,
@@ -75,7 +75,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       Expanded(
                         child: _buildSummaryCard(
                           'Total Users',
-                          _reports!['total_users']?.toString() ?? '0',
+                          _reports.isNotEmpty
+                              ? _reports[0]['total_users']?.toString() ?? '0'
+                              : '0',
                           Icons.people,
                           AppColors.primary,
                         ),
@@ -84,7 +86,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       Expanded(
                         child: _buildSummaryCard(
                           'Active Panels',
-                          _reports!['active_panels']?.toString() ?? '0',
+                          _reports.isNotEmpty
+                              ? _reports[0]['active_panels']?.toString() ?? '0'
+                              : '0',
                           Icons.dashboard,
                           AppColors.success,
                         ),
@@ -97,7 +101,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       Expanded(
                         child: _buildSummaryCard(
                           'Total Batches',
-                          _reports!['total_batches']?.toString() ?? '0',
+                          _reports.isNotEmpty
+                              ? _reports[0]['total_batches']?.toString() ?? '0'
+                              : '0',
                           Icons.batch_prediction,
                           AppColors.secondary,
                         ),
@@ -106,7 +112,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       Expanded(
                         child: _buildSummaryCard(
                           'Completed Reviews',
-                          _reports!['completed_reviews']?.toString() ?? '0',
+                          _reports.isNotEmpty
+                              ? _reports[0]['completed_reviews']?.toString() ??
+                                    '0'
+                              : '0',
                           Icons.check_circle,
                           AppColors.warning,
                         ),
@@ -125,11 +134,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   const SizedBox(height: 16),
                   Expanded(
                     child: ListView.builder(
-                      itemCount:
-                          (_reports!['recent_activity'] as List?)?.length ?? 0,
+                      itemCount: _reports.isNotEmpty
+                          ? (_reports[0]['recent_activity'] as List?)?.length ??
+                                0
+                          : 0,
                       itemBuilder: (context, index) {
-                        final activity =
-                            (_reports!['recent_activity'] as List)[index];
+                        final activity = _reports.isNotEmpty
+                            ? (_reports[0]['recent_activity'] as List)[index]
+                            : {};
                         return ListTile(
                           leading: const Icon(Icons.history),
                           title: Text(activity['action'] ?? 'Unknown action'),
